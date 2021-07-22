@@ -5,6 +5,8 @@ import { Ocean } from './ocean/Ocean'
 import { LoggerInstance as Logger, LogLevel } from './utils/Logger'
 import { MetadataCache } from './metadatacache/MetadataCache'
 import { DataTokens } from './datatokens/Datatokens'
+import { OceanPool } from './balancer/OceanPool'
+import { Pool } from './balancer/Pool'
 import { ConfigHelper, ConfigHelperConfig } from './utils/ConfigHelper'
 
 import * as utils from './utils'
@@ -33,6 +35,8 @@ export {
   MetadataCache,
   DataTokens,
   utils,
+  OceanPool,
+  Pool,
   ConfigHelper,
   ConfigHelperConfig
 }

@@ -14,6 +14,7 @@ import {
 } from '../Instantiable.abstract'
 import { Compute } from './Compute'
 import { OceanPool } from '../balancer/OceanPool'
+import { Pool } from '../balancer/Pool'
 import { OceanFixedRateExchange } from '../exchange/FixedRateExchange'
 import { OceanDispenser } from '../dispenser/Dispenser'
 
@@ -189,4 +190,10 @@ export class Ocean extends Instantiable {
    * @type {OceanUtils}
    */
   public utils: OceanUtils
+
+    /**
+   * Balancer Pools module
+   * @type {OceanPool}
+   */
+     public bPool: Pool
 }

@@ -1,8 +1,8 @@
 {
-  "name": "@oceanprotocol/lib",
+  "name": "datax",
   "source": "./src/index.ts",
-  "version": "0.16.5",
-  "description": "JavaScript client library for Ocean Protocol",
+  "version": "0.1.0",
+  "description": "JavaScript client library (fork of ocean.js) for DataX",
   "main": "./dist/node/lib.js",
   "exports": "./dist/node/lib.js",
   "module": "./dist/node/lib.module.js",
@@ -35,12 +35,12 @@
     "url": "git+https://github.com/oceanprotocol/ocean.js.git"
   },
   "keywords": [],
-  "author": "Ocean Protocol <devops@oceanprotocol.com>",
+  "author": "DataX",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/oceanprotocol/ocean.js/issues"
+    "url": "https://github.com/dataxfi/datax.js/issues"
   },
-  "homepage": "https://github.com/oceanprotocol/ocean.js#readme",
+  "homepage": "https://github.com/dataxfi/datax.js#readme",
   "peerDependencies": {
     "web3": "^1.3.5"
   },
