@@ -1,8 +1,8 @@
 {
   "name": "datax",
   "source": "./src/index.ts",
-  "version": "0.1.0",
-  "description": "JavaScript client library (fork of ocean.js) for DataX",
+  "version": "0.16.5",
+  "description": "Forked version of ocean.js for DataX",
   "main": "./dist/node/lib.js",
   "exports": "./dist/node/lib.js",
   "module": "./dist/node/lib.module.js",
