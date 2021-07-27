@@ -1,5 +1,5 @@
 {
-  "name": "ocean.js",
+  "name": "@dataxfi/ocean.js",
   "source": "./src/index.ts",
   "version": "0.16.6",
   "description": "JavaScript client library for Ocean Protocol",
