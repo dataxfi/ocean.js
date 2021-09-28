@@ -9,8 +9,8 @@ import Decimal from 'decimal.js'
 
 declare type PoolTransactionType = 'swap' | 'join' | 'exit'
 
-const POOL_MAX_AMOUNT_IN_LIMIT = 0.25 // maximum 1/4 of the pool reserve
-const POOL_MAX_AMOUNT_OUT_LIMIT = 0.25 // maximum 1/4 of the pool reserve
+const POOL_MAX_AMOUNT_IN_LIMIT = 0.5 // maximum 1/2 of the pool reserve
+const POOL_MAX_AMOUNT_OUT_LIMIT = 0.34 // maximum 1/3 of the pool reserve
 const BPFACTORY_DEPLOY_BLOCK = 0
 const MAX_AWAIT_PROMISES = 10 // infura has a limit of 10 requests/sec
 export interface PoolDetails {
@@ -597,6 +597,13 @@ export class OceanPool extends Pool {
     amount: string
   ): Promise<TransactionReceipt> {
     const dtAddress = await this.getDTAddress(poolAddress)
+    const maxAmount = await this.getMaxAddLiquidity(poolAddress, dtAddress)
+
+    if (new Decimal(amount).greaterThan(maxAmount)) {
+      this.logger.error('ERROR: Too much reserve to add')
+      return null
+    }
+
     const txid = await super.approve(
       account,
       dtAddress,
@@ -673,6 +680,12 @@ export class OceanPool extends Pool {
       return null
     }
  
+    const maxAmount = await this.getOceanMaxAddLiquidity(poolAddress)
+    if (new Decimal(amount).greaterThan(maxAmount)) {
+      this.logger.error('ERROR: Too much reserve to add')
+      return null
+    }
+
     const txid = await super.approve(
       account,
       this.oceanAddress,
@@ -1225,4 +1238,73 @@ export class OceanPool extends Pool {
     )
     return slippage
   }
+
+
+   /**
+   * Returns max amount of tokens that you can add to the pool
+   * @param poolAddress
+   * @param tokenAddress
+   */
+    public async getMaxAddLiquidity(
+      poolAddress: string,
+      tokenAddress: string
+    ): Promise<string> {
+      const balance = await super.getReserve(poolAddress, tokenAddress)
+      if (parseFloat(balance) > 0) {
+        return new Decimal(balance).mul(POOL_MAX_AMOUNT_IN_LIMIT).toString()
+      } else return '0'
+    }
+
+    /**
+     * Returns max Ocean amount that you can add to the pool
+     * @param poolAddress
+     */
+    public async getOceanMaxAddLiquidity(poolAddress: string): Promise<string> {
+      return this.getMaxAddLiquidity(poolAddress, this.oceanAddress)
+    }
+
+    /**
+     * Returns max DT amount that you can add to the pool
+     * @param poolAddress
+     */
+    public async getDTMaxAddLiquidity(poolAddress: string): Promise<string> {
+      const dtAddress = await this.getDTAddress(poolAddress)
+      return this.getMaxAddLiquidity(poolAddress, dtAddress)
+    }
+
+
+    /**
+     * Returns max amount of tokens that you can withdraw from the pool
+     * @param poolAddress
+     * @param tokenAddress
+     */
+    public async getMaxRemoveLiquidity(
+      poolAddress: string,
+      tokenAddress: string
+    ): Promise<string> {
+      const balance = await super.getReserve(poolAddress, tokenAddress)
+      if (parseFloat(balance) > 0) {
+        return new Decimal(balance).mul(POOL_MAX_AMOUNT_OUT_LIMIT).toString()
+      } else return '0'
+    }
+
+    /**
+   * Returns max amount of DT that you can withdraw from the pool
+   * @param poolAddress
+   * @param tokenAddress
+   */
+    public async getDTMaxRemoveLiquidity(poolAddress: string): Promise<string> {
+      const dtAddress = await this.getDTAddress(poolAddress)
+      return this.getMaxRemoveLiquidity(poolAddress, dtAddress)
+    }
+
+    /**
+     * Returns max amount of Ocean that you can withdraw from the pool
+     * @param poolAddress
+     * @param tokenAddress
+     */
+    public async getOceanMaxRemoveLiquidity(poolAddress: string): Promise<string> {
+      return this.getMaxRemoveLiquidity(poolAddress, this.oceanAddress)
+    }
+
 }
