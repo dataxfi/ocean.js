@@ -763,14 +763,23 @@ export class OceanPool extends Pool {
       this.logger.error('ERROR: Not enough poolShares')
       return null
     }
+
+    const maxRemovalAllowed = await this.getMaxRemoveLiquidity(poolAddress, this.oceanAddress)
+    if(new Decimal(amount).greaterThan(maxRemovalAllowed)){
+      this.logger.error('ERROR: Exceed Max Removal limit')
+      return null
+    }
+
     const sharesRequired = await this.getPoolSharesRequiredToRemoveOcean(
       poolAddress,
       amount
     )
+
     if (new Decimal(maximumPoolShares).lessThan(sharesRequired)) {
       this.logger.error('ERROR: Not enough poolShares')
       return null
     }
+    
     // Balancer bug fix
     if (new Decimal(maximumPoolShares).lessThan(sharesRequired))
       maximumPoolShares = new Decimal(maximumPoolShares).mul(0.9999).toString()
