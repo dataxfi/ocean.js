@@ -15,6 +15,7 @@ export interface ConfigHelperConfig extends Config {
   transactionConfirmationBlocks: number
   transactionPollingTimeout: number
   gasFeeMultiplier: number
+  rbacUri?: string
 }
 
 const configHelperNetworksBase: ConfigHelperConfig = {
