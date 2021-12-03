@@ -11,13 +11,17 @@ export interface ConfigHelperConfig extends Config {
   subgraphUri: string
   explorerUri: string
   oceanTokenSymbol: string
+  transactionBlockTimeout: number
+  transactionConfirmationBlocks: number
+  transactionPollingTimeout: number
+  gasFeeMultiplier: number
 }
 
 const configHelperNetworksBase: ConfigHelperConfig = {
   networkId: null,
   network: 'unknown',
+  metadataCacheUri: 'https://aquarius.oceanprotocol.com',
   nodeUri: 'http://localhost:8545',
-  metadataCacheUri: 'http://127.0.0.1:5000',
   providerUri: 'http://127.0.0.1:8030',
   subgraphUri: null,
   explorerUri: null,
@@ -28,7 +32,11 @@ const configHelperNetworksBase: ConfigHelperConfig = {
   fixedRateExchangeAddress: null,
   dispenserAddress: null,
   metadataContractAddress: null,
-  startBlock: 0
+  startBlock: 0,
+  transactionBlockTimeout: 50,
+  transactionConfirmationBlocks: 1,
+  transactionPollingTimeout: 750,
+  gasFeeMultiplier: 1
 }
 
 export const configHelperNetworks: ConfigHelperConfig[] = [
@@ -39,14 +47,15 @@ export const configHelperNetworks: ConfigHelperConfig[] = [
     // barge
     ...configHelperNetworksBase,
     networkId: 8996,
-    network: 'development'
+    network: 'development',
+    metadataCacheUri: 'http://127.0.0.1:5000',
+    rbacUri: 'http://127.0.0.1:3000'
   },
   {
     ...configHelperNetworksBase,
     networkId: 3,
     network: 'ropsten',
     nodeUri: 'https://ropsten.infura.io/v3',
-    metadataCacheUri: 'https://aquarius.ropsten.oceanprotocol.com',
     providerUri: 'https://provider.ropsten.oceanprotocol.com',
     subgraphUri: 'https://subgraph.ropsten.oceanprotocol.com',
     explorerUri: 'https://ropsten.etherscan.io',
@@ -57,7 +66,6 @@ export const configHelperNetworks: ConfigHelperConfig[] = [
     networkId: 4,
     network: 'rinkeby',
     nodeUri: 'https://rinkeby.infura.io/v3',
-    metadataCacheUri: 'https://aquarius.rinkeby.oceanprotocol.com',
     providerUri: 'https://provider.rinkeby.oceanprotocol.com',
     subgraphUri: 'https://subgraph.rinkeby.oceanprotocol.com',
     explorerUri: 'https://rinkeby.etherscan.io',
@@ -68,30 +76,32 @@ export const configHelperNetworks: ConfigHelperConfig[] = [
     networkId: 1,
     network: 'mainnet',
     nodeUri: 'https://mainnet.infura.io/v3',
-    metadataCacheUri: 'https://aquarius.mainnet.oceanprotocol.com',
     providerUri: 'https://provider.mainnet.oceanprotocol.com',
     subgraphUri: 'https://subgraph.mainnet.oceanprotocol.com',
     explorerUri: 'https://etherscan.io',
-    startBlock: 11105459
+    startBlock: 11105459,
+    transactionBlockTimeout: 150,
+    transactionConfirmationBlocks: 5,
+    transactionPollingTimeout: 1750,
+    gasFeeMultiplier: 1.05
   },
   {
     ...configHelperNetworksBase,
     networkId: 137,
     network: 'polygon',
     nodeUri: 'https://polygon-mainnet.infura.io/v3',
-    metadataCacheUri: 'https://aquarius.polygon.oceanprotocol.com',
     providerUri: 'https://provider.polygon.oceanprotocol.com',
     subgraphUri: 'https://subgraph.polygon.oceanprotocol.com',
     explorerUri: 'https://polygonscan.com',
     oceanTokenSymbol: 'mOCEAN',
-    startBlock: 11005222
+    startBlock: 11005222,
+    gasFeeMultiplier: 1.05
   },
   {
     ...configHelperNetworksBase,
     networkId: 1287,
     network: 'moonbeamalpha',
     nodeUri: 'https://rpc.testnet.moonbeam.network',
-    metadataCacheUri: 'https://aquarius.moonbeamalpha.oceanprotocol.com',
     providerUri: 'https://provider.moonbeamalpha.oceanprotocol.com',
     subgraphUri: 'https://subgraph.moonbeamalpha.oceanprotocol.com',
     explorerUri: 'https://moonbase-blockscout.testnet.moonbeam.network/',
@@ -101,18 +111,26 @@ export const configHelperNetworks: ConfigHelperConfig[] = [
     ...configHelperNetworksBase,
     networkId: 2021000,
     network: 'gaiaxtestnet',
-    nodeUri: 'https://gaia-x.rpc',
-    metadataCacheUri: 'https://aquarius.gaiaxtestnet.oceanprotocol.com',
+    nodeUri: 'https://rpc.gaiaxtestnet.oceanprotocol.com',
     providerUri: 'https://provider.gaiaxtestnet.oceanprotocol.com',
     subgraphUri: 'https://subgraph.gaiaxtestnet.oceanprotocol.com',
     explorerUri: 'https://blockscout.gaiaxtestnet.oceanprotocol.com'
   },
   {
     ...configHelperNetworksBase,
+    networkId: 2021001,
+    network: 'catenaxtestnet',
+    nodeUri: 'https://rpc.catenaxtestnet.oceanprotocol.com',
+    providerUri: 'https://provider.catenaxtestnet.oceanprotocol.com',
+    subgraphUri: 'https://subgraph.catenaxtestnet.oceanprotocol.com',
+    explorerUri: 'https://blockscout.catenaxtestnet.oceanprotocol.com',
+    metadataCacheUri: 'https://aquarius.catenaxtestnet.oceanprotocol.com'
+  },
+  {
+    ...configHelperNetworksBase,
     networkId: 80001,
     network: 'mumbai',
     nodeUri: 'https://polygon-mumbai.infura.io/v3',
-    metadataCacheUri: 'https://aquarius.mumbai.oceanprotocol.com',
     providerUri: 'https://provider.mumbai.oceanprotocol.com',
     subgraphUri: 'https://subgraph.mumbai.oceanprotocol.com',
     explorerUri: 'https://mumbai.polygonscan.com'
@@ -122,10 +140,39 @@ export const configHelperNetworks: ConfigHelperConfig[] = [
     networkId: 56,
     network: 'bsc',
     nodeUri: 'https://bsc-dataseed.binance.org',
-    metadataCacheUri: 'https://aquarius.bsc.oceanprotocol.com',
     providerUri: 'https://provider.bsc.oceanprotocol.com',
     subgraphUri: 'https://subgraph.bsc.oceanprotocol.com',
-    explorerUri: 'https://bscscan.com/'
+    explorerUri: 'https://bscscan.com/',
+    gasFeeMultiplier: 1.05
+  },
+  {
+    ...configHelperNetworksBase,
+    networkId: 44787,
+    network: 'celoalfajores',
+    nodeUri: 'https://alfajores-forno.celo-testnet.org',
+    providerUri: 'https://provider.celoalfajores.oceanprotocol.com',
+    subgraphUri: 'https://subgraph.celoalfajores.oceanprotocol.com',
+    explorerUri: 'https://alfajores-blockscout.celo-testnet.org'
+  },
+  {
+    ...configHelperNetworksBase,
+    networkId: 246,
+    network: 'energyweb',
+    nodeUri: 'https://rpc.energyweb.org',
+    providerUri: 'https://provider.energyweb.oceanprotocol.com',
+    subgraphUri: 'https://subgraph.energyweb.oceanprotocol.com',
+    explorerUri: 'https://explorer.energyweb.org',
+    gasFeeMultiplier: 1.05
+  },
+  {
+    ...configHelperNetworksBase,
+    networkId: 1285,
+    network: 'moonriver',
+    nodeUri: 'https://moonriver.api.onfinality.io/public',
+    providerUri: 'https://provider.moonriver.oceanprotocol.com',
+    subgraphUri: 'https://subgraph.moonriver.oceanprotocol.com',
+    explorerUri: 'https://blockscout.moonriver.moonbeam.network',
+    gasFeeMultiplier: 1.05
   }
 ]
 
