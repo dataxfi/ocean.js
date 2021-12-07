@@ -760,7 +760,7 @@ export class OceanPool extends Pool {
    * @param {String} maximumPoolShares maximum pool shares allowed to be spent
    * @return {TransactionReceipt}
    */
-  public async removeOceanLiquidity(
+   public async removeOceanLiquidity(
     account: string,
     poolAddress: string,
     amount: string,
@@ -770,15 +770,18 @@ export class OceanPool extends Pool {
       this.logger.error('ERROR: oceanAddress is not defined')
       return null
     }
-  
+
     const usershares = await this.sharesBalance(account, poolAddress)
     if (new Decimal(usershares).lessThan(maximumPoolShares)) {
       this.logger.error('ERROR: Not enough poolShares')
       return null
     }
 
-    const maxRemovalAllowed = await this.getMaxRemoveLiquidity(poolAddress, this.oceanAddress)
-    if(new Decimal(amount).greaterThan(maxRemovalAllowed)){
+    const maxRemovalAllowed = await this.getMaxRemoveLiquidity(
+      poolAddress,
+      this.oceanAddress
+    )
+    if (new Decimal(amount).greaterThan(maxRemovalAllowed)) {
       this.logger.error('ERROR: Exceed Max Removal limit')
       return null
     }
@@ -790,6 +793,17 @@ export class OceanPool extends Pool {
 
     if (new Decimal(maximumPoolShares).lessThan(sharesRequired)) {
       this.logger.error('ERROR: Not enough poolShares')
+      return null
+    }
+
+    const txid = await super.approve(
+      account,
+      this.oceanAddress,
+      poolAddress,
+      this.web3.utils.toWei(amount)
+    )
+    if (!txid) {
+      this.logger.error('ERROR: OCEAN approve failed')
       return null
     }
 
@@ -805,6 +819,7 @@ export class OceanPool extends Pool {
       maximumPoolShares
     )
   }
+
 
   /**
    * Remove pool liquidity
