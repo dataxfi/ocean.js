@@ -144,7 +144,8 @@ export const configHelperNetworks: ConfigHelperConfig[] = [
     providerUri: 'https://provider.bsc.oceanprotocol.com',
     subgraphUri: 'https://subgraph.bsc.oceanprotocol.com',
     explorerUri: 'https://bscscan.com/',
-    gasFeeMultiplier: 1.05
+    gasFeeMultiplier: 1.05,
+    startBlock: 8114772
   },
   {
     ...configHelperNetworksBase,
