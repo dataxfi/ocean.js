@@ -2,7 +2,7 @@
   "name": "@dataxfi/ocean.js",
   "private": false,
   "source": "./src/index.ts",
-  "version": "0.17.3",
+  "version": "0.17.4",
   "description": "JavaScript client library for Ocean Protocol",
   "main": "./dist/node/lib.js",
   "exports": "./dist/node/lib.js",
