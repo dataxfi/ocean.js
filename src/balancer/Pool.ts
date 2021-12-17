@@ -105,6 +105,7 @@ export class Pool extends PoolFactory {
         })
     } catch (e) {
       this.logger.error(`ERROR: Failed to setup a pool: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -196,7 +197,8 @@ export class Pool extends PoolFactory {
         gasPrice: await getFairGasPrice(this.web3)
       })
     } catch (e) {
-      this.logger.error(`ERRPR: Failed to approve spender to spend tokens : ${e.message}`)
+      this.logger.error(`ERROR: Failed to approve spender to spend tokens : ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -215,6 +217,7 @@ export class Pool extends PoolFactory {
       result = this.web3.utils.fromWei(balance)
     } catch (e) {
       this.logger.error(`ERROR: Failed to get shares of pool : ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -257,6 +260,7 @@ export class Pool extends PoolFactory {
           })
       } catch (e) {
         this.logger.error(`ERROR: Failed to add tokens to pool: ${e.message}`)
+        throw (e)
       }
     }
   }
@@ -284,6 +288,7 @@ export class Pool extends PoolFactory {
       })
     } catch (e) {
       this.logger.error(`ERROR: Failed to set pool swap fee: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -306,6 +311,7 @@ export class Pool extends PoolFactory {
       })
     } catch (e) {
       this.logger.error(`ERROR: Failed to finalize pool: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -322,6 +328,7 @@ export class Pool extends PoolFactory {
       result = await pool.methods.getNumTokens().call()
     } catch (e) {
       this.logger.error(`ERROR: Failed to get number of tokens: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -339,6 +346,7 @@ export class Pool extends PoolFactory {
       amount = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error(`ERROR: Failed to get total supply of pool shares: ${e.message}`)
+      throw (e)
     }
     return amount
   }
@@ -355,6 +363,7 @@ export class Pool extends PoolFactory {
       result = await pool.methods.getCurrentTokens().call()
     } catch (e) {
       this.logger.error(`ERROR: Failed to get tokens composing this pool: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -371,6 +380,7 @@ export class Pool extends PoolFactory {
       result = await pool.methods.getFinalTokens().call()
     } catch (e) {
       this.logger.error(`ERROR: Failed to get the final tokens composing this pool`)
+      throw (e)
     }
     return result
   }
@@ -387,6 +397,7 @@ export class Pool extends PoolFactory {
       result = await pool.methods.getController().call()
     } catch (e) {
       this.logger.error(`ERROR: Failed to get pool controller address: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -413,6 +424,7 @@ export class Pool extends PoolFactory {
         .send({ from: account, gas: this.GASLIMIT_DEFAULT })
     } catch (e) {
       this.logger.error(`ERROR: Failed to set pool controller: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -431,6 +443,7 @@ export class Pool extends PoolFactory {
     } catch (e) {
       this.logger.error(`ERROR: Failed to check whether a token \
       bounded to a pool. ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -450,6 +463,7 @@ export class Pool extends PoolFactory {
     } catch (e) {
       this.logger.error(`ERROR: Failed to get how many tokens \
       are in the pool: ${e.message}`)
+      throw (e)
     }
     return amount
   }
@@ -466,6 +480,7 @@ export class Pool extends PoolFactory {
       result = await pool.methods.isFinalized().call()
     } catch (e) {
       this.logger.error(`ERROR: Failed to check whether pool is finalized: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -483,6 +498,7 @@ export class Pool extends PoolFactory {
       fee = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error(`ERROR: Failed to get pool fee: ${e.message}`)
+      throw (e)
     }
     return fee
   }
@@ -501,6 +517,7 @@ export class Pool extends PoolFactory {
       weight = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error(`ERROR: Failed to get normalized weight of a token: ${e.message}`)
+      throw (e)
     }
     return weight
   }
@@ -519,6 +536,7 @@ export class Pool extends PoolFactory {
       weight = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error('ERROR: Failed to get denormalized weight of a token in pool')
+      throw (e)
     }
     return weight
   }
@@ -536,6 +554,7 @@ export class Pool extends PoolFactory {
       weight = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error('ERROR: Failed to get total denormalized weight in pool')
+      throw (e)
     }
     return weight
   }
@@ -597,6 +616,7 @@ export class Pool extends PoolFactory {
         })
     } catch (e) {
       this.logger.error(`ERROR: Failed to swap exact amount in : ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -658,6 +678,7 @@ export class Pool extends PoolFactory {
         })
     } catch (e) {
       this.logger.error(`ERROR: Failed to swap exact amount out: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -707,6 +728,7 @@ export class Pool extends PoolFactory {
         })
     } catch (e) {
       this.logger.error(`ERROR: Failed to join pool: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -750,6 +772,7 @@ export class Pool extends PoolFactory {
         .send({ from: account, gas: estGas, gasPrice: await getFairGasPrice(this.web3) })
     } catch (e) {
       this.logger.error(`ERROR: Failed to exit pool: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -802,6 +825,7 @@ export class Pool extends PoolFactory {
     } catch (e) {
       this.logger.error(`ERROR: Failed to pay tokens in order to \
       join the pool: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -853,6 +877,7 @@ export class Pool extends PoolFactory {
         })
     } catch (e) {
       this.logger.error('ERROR: Failed to join swap pool amount out')
+      throw (e)
     }
     return result
   }
@@ -904,6 +929,7 @@ export class Pool extends PoolFactory {
         })
     } catch (e) {
       this.logger.error(`ERROR: Failed to pay pool shares into the pool: ${e.message}`)
+      throw (e)
     }
     return result
   }
@@ -958,6 +984,7 @@ export class Pool extends PoolFactory {
         })
     } catch (e) {
       this.logger.error('ERROR: Failed to exitswapExternAmountOut')
+      throw (e)
     }
     return result
   }
@@ -981,6 +1008,7 @@ export class Pool extends PoolFactory {
       price = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error('ERROR: Failed to get spot price of swapping tokenIn to tokenOut')
+      throw (e)
     }
     return price
   }
@@ -1004,6 +1032,7 @@ export class Pool extends PoolFactory {
       price = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error('ERROR: Failed to getSpotPriceSansFee')
+      throw (e)
     }
     return price
   }
@@ -1031,6 +1060,7 @@ export class Pool extends PoolFactory {
       amount = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error('ERROR: Failed to call calcSpotPrice')
+      throw (e)
     }
     return amount
   }
@@ -1061,6 +1091,7 @@ export class Pool extends PoolFactory {
       amount = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error('ERROR: Failed to calcInGivenOut')
+      throw (e)
     }
     return amount
   }
@@ -1090,6 +1121,7 @@ export class Pool extends PoolFactory {
       amount = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error('ERROR: Failed to calcOutGivenIn')
+      throw (e)
     }
     return amount
   }
@@ -1119,6 +1151,7 @@ export class Pool extends PoolFactory {
       amount = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error(`ERROR: Failed to calculate PoolOutGivenSingleIn : ${e.message}`)
+      throw (e)
     }
     return amount
   }
@@ -1148,6 +1181,7 @@ export class Pool extends PoolFactory {
       amount = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error(`ERROR: Failed to calculate SingleInGivenPoolOut : ${e.message}`)
+      throw (e)
     }
     return amount
   }
@@ -1177,6 +1211,7 @@ export class Pool extends PoolFactory {
       amount = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error(`ERROR: Failed to calculate SingleOutGivenPoolIn : ${e.message}`)
+      throw (e)
     }
     return amount
   }
@@ -1206,6 +1241,7 @@ export class Pool extends PoolFactory {
       amount = this.web3.utils.fromWei(result)
     } catch (e) {
       this.logger.error(`ERROR: Failed to calculate PoolInGivenSingleOut : ${e.message}`)
+      throw (e)
     }
     return amount
   }

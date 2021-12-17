@@ -196,7 +196,7 @@ export class OceanPool extends Pool {
   public async getOceanReserve(poolAddress: string): Promise<string> {
     if (this.oceanAddress == null) {
       this.logger.error('ERROR: oceanAddress is not defined')
-      return null
+      throw new Error('ERROR: oceanAddress is not defined')
     }
     return super.getReserve(poolAddress, this.oceanAddress)
   }
@@ -451,14 +451,14 @@ export class OceanPool extends Pool {
   ): Promise<TransactionReceipt> {
     if (this.oceanAddress == null) {
       this.logger.error('ERROR: undefined ocean token contract address')
-      return null
+      throw new Error('ERROR: undefined ocean token contract address')
     }
     const dtAddress = await this.getDTAddress(poolAddress)
 
     const calcInGivenOut = await this.getOceanNeeded(poolAddress, dtAmountWanted)
     if (new Decimal(calcInGivenOut).greaterThan(maxOceanAmount)) {
       this.logger.error('ERROR: Not enough Ocean Tokens')
-      return null
+      throw new Error('ERROR: Not enough Ocean Tokens')
     }
     // TODO - check balances first
     const txid = await super.approve(
@@ -469,7 +469,7 @@ export class OceanPool extends Pool {
     )
     if (!txid) {
       this.logger.error('ERROR: OCEAN approve failed')
-      return null
+      throw new Error('ERROR: OCEAN approve failed')
     }
     const tx = await super.swapExactAmountOut(
       account,
@@ -501,14 +501,14 @@ export class OceanPool extends Pool {
   ): Promise<TransactionReceipt> {
     if (this.oceanAddress == null) {
       this.logger.error('ERROR: undefined ocean token contract address')
-      return null
+      throw new Error('ERROR: undefined ocean token contract address')
     }
     const dtAddress = await this.getDTAddress(poolAddress)
 
     const calcInGivenOut = await this.getOceanNeeded(poolAddress, minimumdtAmountWanted)
     if (new Decimal(calcInGivenOut).greaterThan(OceanAmount)) {
       this.logger.error('ERROR: Not enough Ocean Tokens')
-      return null
+      throw new Error('ERROR: Not enough Ocean Tokens')
     }
     // TODO - check balances first
     const txid = await super.approve(
@@ -519,7 +519,7 @@ export class OceanPool extends Pool {
     )
     if (!txid) {
       this.logger.error('ERROR: OCEAN approve failed')
-      return null
+      throw new Error('ERROR: OCEAN approve failed')
     }
     const tx = await super.swapExactAmountIn(
       account,
@@ -551,14 +551,14 @@ export class OceanPool extends Pool {
   ): Promise<TransactionReceipt> {
     if (this.oceanAddress == null) {
       this.logger.error('ERROR: oceanAddress is not defined')
-      return null
+      throw new Error('ERROR: oceanAddress is not defined')
     }
     const dtAddress = await this.getDTAddress(poolAddress)
 
     const calcOutGivenIn = await this.getOceanReceived(poolAddress, dtAmount)
     if (new Decimal(calcOutGivenIn).lessThan(oceanAmountWanted)) {
       this.logger.error('ERROR: Not enough datatokens')
-      return null
+      throw new Error('ERROR: Not enough datatokens')
     }
     const txid = await super.approve(
       account,
@@ -568,7 +568,7 @@ export class OceanPool extends Pool {
     )
     if (!txid) {
       this.logger.error('ERROR: DT approve failed')
-      return null
+      throw new Error('ERROR: DT approve failed')
     }
     const tx = await super.swapExactAmountIn(
       account,
@@ -599,7 +599,7 @@ export class OceanPool extends Pool {
 
     if (new Decimal(amount).greaterThan(maxAmount)) {
       this.logger.error('ERROR: Too much reserve to add')
-      return null
+      throw new Error('ERROR: Too much reserve to add')
     }
 
     const txid = await super.approve(
@@ -610,8 +610,8 @@ export class OceanPool extends Pool {
     )
     if (!txid) {
       this.logger.error('ERROR: DT approve failed')
-      return null
-    }
+      throw new Error('ERROR: DT approve failed')
+      }
     const result = await super.joinswapExternAmountIn(
       account,
       poolAddress,
@@ -641,19 +641,19 @@ export class OceanPool extends Pool {
     const usershares = await this.sharesBalance(account, poolAddress)
     if (new Decimal(usershares).lessThan(maximumPoolShares)) {
       this.logger.error('ERROR: Not enough poolShares')
-      return null
+      throw new Error('ERROR: Not enough poolShares')
     }
 
     const maxRemovalAllowed = await this.getMaxRemoveLiquidity(poolAddress, dtAddress)
     if (new Decimal(amount).greaterThan(maxRemovalAllowed)) {
       this.logger.error('ERROR: Exceed Max Removal limit')
-      return null
+      throw new Error('ERROR: Exceed Max Removal limit')
     }
 
     const sharesRequired = await this.getPoolSharesRequiredToRemoveDT(poolAddress, amount)
     if (new Decimal(maximumPoolShares).lessThan(sharesRequired)) {
       this.logger.error('ERROR: Not enough poolShares')
-      return null
+      throw new Error('ERROR: Not enough poolShares')
     }
     // Balancer bug fix
     if (new Decimal(maximumPoolShares).lessThan(sharesRequired))
@@ -682,13 +682,13 @@ export class OceanPool extends Pool {
   ): Promise<TransactionReceipt> {
     if (this.oceanAddress == null) {
       this.logger.error('ERROR: oceanAddress is not defined')
-      return null
+      throw new Error ('ERROR: oceanAddress is not defined')
     }
 
     const maxAmount = await this.getOceanMaxAddLiquidity(poolAddress)
     if (new Decimal(amount).greaterThan(maxAmount)) {
       this.logger.error('ERROR: Too much reserve to add')
-      return null
+      throw new Error('ERROR: Too much reserve to add')
     }
 
     const txid = await super.approve(
@@ -699,7 +699,7 @@ export class OceanPool extends Pool {
     )
     if (!txid) {
       this.logger.error('ERROR: OCEAN approve failed')
-      return null
+      throw new Error('ERROR: OCEAN approve failed')
     }
     const result = await super.joinswapExternAmountIn(
       account,
@@ -727,12 +727,12 @@ export class OceanPool extends Pool {
   ): Promise<TransactionReceipt> {
     if (this.oceanAddress == null) {
       this.logger.error('ERROR: oceanAddress is not defined')
-      return null
+      throw new Error('ERROR: oceanAddress is not defined')
     }
     const usershares = await this.sharesBalance(account, poolAddress)
     if (new Decimal(usershares).lessThan(poolShares)) {
       this.logger.error('ERROR: Not enough poolShares')
-      return null
+      throw new Error('ERROR: Not enough poolShares')
     }
 
     const maxRemovalAllowed = await this.getMaxRemoveLiquidity(
@@ -741,7 +741,7 @@ export class OceanPool extends Pool {
     )
     if (new Decimal(minOcean).greaterThan(maxRemovalAllowed)) {
       this.logger.error('ERROR: Exceed Max Removal limit')
-      return null
+      throw new Error('ERROR: Exceed Max Removal limit')
     }
 
     return super.exitswapPoolAmountIn(
@@ -769,13 +769,13 @@ export class OceanPool extends Pool {
   ): Promise<TransactionReceipt> {
     if (this.oceanAddress == null) {
       this.logger.error('ERROR: oceanAddress is not defined')
-      return null
+      throw new Error('ERROR: oceanAddress is not defined')
     }
 
     const usershares = await this.sharesBalance(account, poolAddress)
     if (new Decimal(usershares).lessThan(maximumPoolShares)) {
       this.logger.error('ERROR: Not enough poolShares')
-      return null
+      throw new Error('ERROR: Not enough poolShares')
     }
 
     const maxRemovalAllowed = await this.getMaxRemoveLiquidity(
@@ -784,7 +784,7 @@ export class OceanPool extends Pool {
     )
     if (new Decimal(amount).greaterThan(maxRemovalAllowed)) {
       this.logger.error('ERROR: Exceed Max Removal limit')
-      return null
+      throw new Error('ERROR: Exceed Max Removal limit')
     }
 
     const sharesRequired = await this.getPoolSharesRequiredToRemoveOcean(
@@ -794,7 +794,7 @@ export class OceanPool extends Pool {
 
     if (new Decimal(maximumPoolShares).lessThan(sharesRequired)) {
       this.logger.error('ERROR: Not enough poolShares')
-      return null
+      throw new Error('ERROR: Not enough poolShares')
     }
 
     const txid = await super.approve(
@@ -805,7 +805,7 @@ export class OceanPool extends Pool {
     )
     if (!txid) {
       this.logger.error('ERROR: OCEAN approve failed')
-      return null
+      throw new Error('ERROR: OCEAN approve failed')
     }
 
     // Balancer bug fix
@@ -840,7 +840,7 @@ export class OceanPool extends Pool {
     const usershares = await this.sharesBalance(account, poolAddress)
     if (new Decimal(usershares).lessThan(poolShares)) {
       this.logger.error('ERROR: Not enough poolShares')
-      return null
+      throw new Error('ERROR: Not enough poolShares')
     }
     // Balancer bug fix
     if (new Decimal(usershares).equals(poolShares))
@@ -959,7 +959,7 @@ export class OceanPool extends Pool {
   public async getPoolSharesByAddress(
     account: string,
     fromBlock: number | undefined,
-    fetchTo,
+    fetchTo
   ): Promise<PoolShare[]> {
     const result: PoolShare[] = []
     const factory = new this.web3.eth.Contract(this.factoryABI, this.factoryAddress)
@@ -987,10 +987,10 @@ export class OceanPool extends Pool {
       promises = []
     }
 
-      const filteredResult = result.filter((share) => {
-        return share !== undefined
-      })
-      return filteredResult
+    const filteredResult = result.filter((share) => {
+      return share !== undefined
+    })
+    return filteredResult
   }
 
   /**
